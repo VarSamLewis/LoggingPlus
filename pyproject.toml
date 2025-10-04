@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "loggingplus"
+version = "0.1.0"
+description = "Personal logging utils library"
+authors = ["VarSamLewis"]
+readme = "README.md"
+packages = [{include = "loggingplus", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
