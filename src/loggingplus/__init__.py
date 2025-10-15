@@ -1,3 +1,3 @@
-from .core import StructuredLogger, JSONFormatter, setup_logger
+from .core import LoggerConfig, Logger, LoggerPersistence, setup_logger
 
-__all__ = ['StructuredLogger', 'JSONFormatter', 'setup_logger']
+__all__ = ["LoggerConfig", "Logger", "LoggerPersistence", "setup_logger"]

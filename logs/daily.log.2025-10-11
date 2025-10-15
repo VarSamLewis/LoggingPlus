@@ -1,0 +1,8 @@
+2025-10-11 17:34:19,979 | INFO     | configured_app | Application started
+2025-10-11 17:34:19,981 | WARNING  | configured_app | This is a warning
+2025-10-11 17:34:19,981 | ERROR    | configured_app | An error occurred
+Traceback (most recent call last):
+  File "C:\Users\samle\source\repos\LoggingPlus\src\loggingplus\core.py", line 673, in <module>
+    1 / 0
+    ~~^~~
+ZeroDivisionError: division by zero

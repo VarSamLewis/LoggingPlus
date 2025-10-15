@@ -1,0 +1,3 @@
+"""
+Tests package for LoggingPlus
+"""
