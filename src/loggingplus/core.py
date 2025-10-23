@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 from typing import Optional, List, Dict, Any
-from datetime import datetime
 
 
 class LoggerConfig:
@@ -32,7 +31,7 @@ class LoggerConfig:
         self.name = name
         self.level = level
         self.format_string = format_string or (
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            "%(asctime)s - %(name)s - %(levelname)s - %(errortype)s - %(message)s"
         )
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
@@ -163,36 +162,60 @@ class Logger:
         """
         self._logger = logger
 
-    def debug(self, msg: str, *args, **kwargs):
+    def debug(self, msg: str, *args, errortype: Optional[type] = None, **kwargs):
         """Log debug message."""
+        extra = kwargs.get('extra', {})
+        extra['errortype'] = errortype.__name__ if errortype else None
+        kwargs['extra'] = extra
         self._logger.debug(msg, *args, **kwargs)
 
-    def info(self, msg: str, *args, **kwargs):
+    def info(self, msg: str, *args, errortype: Optional[type] = None, **kwargs):
         """Log info message."""
+        extra = kwargs.get('extra', {})
+        extra['errortype'] = errortype.__name__ if errortype else None
+        kwargs['extra'] = extra
         self._logger.info(msg, *args, **kwargs)
 
-    def warning(self, msg: str, *args, **kwargs):
+    def warning(self, msg: str, *args, errortype: Optional[type] = None, **kwargs):
         """Log warning message."""
+        extra = kwargs.get('extra', {})
+        extra['errortype'] = errortype.__name__ if errortype else None
+        kwargs['extra'] = extra
         self._logger.warning(msg, *args, **kwargs)
 
-    def warn(self, msg: str, *args, **kwargs):
+    def warn(self, msg: str, *args, errortype: Optional[type] = None, **kwargs):
         """Alias for warning."""
+        extra = kwargs.get('extra', {})
+        extra['errortype'] = errortype.__name__ if errortype else None
+        kwargs['extra'] = extra
         self._logger.warning(msg, *args, **kwargs)
 
-    def error(self, msg: str, *args, **kwargs):
+    def error(self, msg: str, *args, errortype: Optional[type] = None, **kwargs):
         """Log error message."""
+        extra = kwargs.get('extra', {})
+        extra['errortype'] = errortype.__name__ if errortype else None
+        kwargs['extra'] = extra
         self._logger.error(msg, *args, **kwargs)
 
-    def critical(self, msg: str, *args, **kwargs):
+    def critical(self, msg: str, *args, errortype: Optional[type] = None, **kwargs):
         """Log critical message."""
+        extra = kwargs.get('extra', {})
+        extra['errortype'] = errortype.__name__ if errortype else None
+        kwargs['extra'] = extra
         self._logger.critical(msg, *args, **kwargs)
 
-    def exception(self, msg: str, *args, **kwargs):
+    def exception(self, msg: str, *args, errortype: Optional[type] = None, **kwargs):
         """Log exception with traceback."""
+        extra = kwargs.get('extra', {})
+        extra['errortype'] = errortype.__name__ if errortype else None
+        kwargs['extra'] = extra
         self._logger.exception(msg, *args, **kwargs)
 
-    def log(self, level: int, msg: str, *args, **kwargs):
+    def log(self, level: int, msg: str, *args, errortype: Optional[type] = None, **kwargs):
         """Log message at specified level."""
+        extra = kwargs.get('extra', {})
+        extra['errortype'] = errortype.__name__ if errortype else None
+        kwargs['extra'] = extra
         self._logger.log(level, msg, *args, **kwargs)
 
     def set_level(self, level: int):
@@ -639,4 +662,19 @@ if __name__ == "__main__":
     try:
         1 / 0
     except Exception as e:
-        logger3.exception("An error occurred")
+        logger3.exception("An error occurred", errortype=type(e))
+
+    # Example 4: Using errortype parameter with specific exception types
+    from urllib.error import HTTPError
+
+    logger4 = setup_logger(name="error_tracking", level=logging.INFO)
+
+    # Simulating an HTTP error
+    try:
+        # This would be your actual HTTP request
+        raise HTTPError(None, 404, "Not Found", None, None)
+    except HTTPError as e:
+        logger4.error("Failed to fetch resource", errortype=type(e))
+
+    # Regular log without errortype (will show None)
+    logger4.info("This is a normal info message")
