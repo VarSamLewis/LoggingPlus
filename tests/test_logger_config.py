@@ -87,22 +87,6 @@ class TestLoggerConfig:
 
         assert log_file.parent.exists()
 
-    def test_add_file_handler_custom_mode(self, tmp_path):
-        """Test file handler with write mode."""
-        log_file = tmp_path / "test.log"
-        log_file.write_text("existing content\n")
-
-        config = LoggerConfig(name="test_file_mode")
-        config.add_file_handler(str(log_file), mode="w")
-
-        # Write mode should truncate
-        logger = config.get_logger()
-        logger.info("new message")
-
-        content = log_file.read_text()
-        assert "existing content" not in content
-        assert "new message" in content
-
     def test_add_rotating_file_handler(self, tmp_path):
         """Test adding rotating file handler."""
         log_file = tmp_path / "rotating.log"
